@@ -98,7 +98,6 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
-  poufPrefab: {fileID: 0}
   currentLife: 0
 --- !u!1 &736397643
 GameObject:
@@ -145,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectableFloors: []
-  enemies: []
+  ennemies: []
 --- !u!1 &453982288201641410
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +276,6 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
-  poufPrefab: {fileID: 0}
   currentLife: 0
 --- !u!1 &2490590035468159514
 GameObject:
@@ -323,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSize: {x: 7, y: 7}
-  floorPrefab: {fileID: 6871663186953823023, guid: 256b2f109a52b6845b6fabc3a9b35352,
+  floorPrefab: {fileID: 1582059327297576096, guid: 730201b9cd89598419ed1c3d4053b2fe,
     type: 3}
 --- !u!1 &2490590035865879906
 GameObject:
@@ -469,7 +467,6 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
-  poufPrefab: {fileID: 0}
   currentLife: 0
 --- !u!1 &2490590036562292318
 GameObject:
