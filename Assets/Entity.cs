@@ -9,6 +9,7 @@ public class Entity : MonoBehaviour
     public int moveSpeed = 1;
     public int attackRange = 1;
     public int attackValue = 1;
+    public GameObject poufPrefab;
 
     private void Awake()
     {
