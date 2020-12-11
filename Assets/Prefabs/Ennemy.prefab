@@ -51,7 +51,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9a9a4928085f5a248b40c7c330fd2999, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
+  poufPrefab: {fileID: 0}
   currentLife: 0
 --- !u!95 &3831305146918495069
 Animator:
