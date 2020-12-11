@@ -138,7 +138,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_1_Idle_Face
-  m_Speed: 1
+  m_Speed: 0.1
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -475,8 +475,8 @@ AnimatorStateMachine:
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -90, y: 600, z: 0}
-  m_EntryPosition: {x: 270, y: 260, z: 0}
-  m_ExitPosition: {x: 1220, y: 270, z: 0}
+  m_EntryPosition: {x: -1210, y: 90, z: 0}
+  m_ExitPosition: {x: -1100, y: 330, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -6156154844196329698}
 --- !u!1102 &6753238788432008888
