@@ -7,7 +7,9 @@ public class SelectableFloor : MonoBehaviour
 {
     public bool selected = false;
     public bool canMove = false;
+    public bool canAttack = false;
     public bool blocked = false;
+    public Enemy enemy;
     public Material[] materials;
     void Select()
     {
@@ -25,6 +27,17 @@ public class SelectableFloor : MonoBehaviour
         if (canMove) Walkable();
         else NonWalkable();
         if (blocked) Blocked();
+        if (canAttack) Attackable();
+        if (enemy != null)
+        {
+            blocked = true;
+        }
+        else blocked = false;
+    }
+
+    private void Attackable()
+    {
+        this.GetComponent<Renderer>().material = materials[3];
     }
 
     private void Blocked()

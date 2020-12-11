@@ -13,6 +13,7 @@ public class SquadControl : MonoBehaviour
 
     public float turnSpeed = .4f;
 
+    public bool attackMode;
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,39 +23,91 @@ public class SquadControl : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {            
-        foreach (SelectableFloor selectableFloor in selectableFloors) selectableFloor.selected = false;
+    {
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit)) hit.transform.gameObject.GetComponent<SelectableFloor>().selected = true; ;
-        if (Input.GetButtonDown("Fire1")&&Tools.Timer.Check(nextTurn))
+        foreach (SelectableFloor selectableFloor in selectableFloors)
         {
-            if (hit.transform.gameObject.GetComponent<SelectableFloor>().canMove)
-            {
-                nextTurn = Tools.Timer.New(turnSpeed);
-                MoveMember(1, hit.transform.position);
-                teamMemberTurn++;
-                if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = 0;
-            }
+
+            selectableFloor.selected = false;
         }
 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit)) hit.transform.gameObject.GetComponent<SelectableFloor>().selected = true;
 
+        if (Input.GetButtonDown("Fire1") && Tools.Timer.Check(nextTurn))
+        {
+            if (hit.transform.gameObject.TryGetComponent(out SelectableFloor floor))
+            {
+                if (!attackMode)
+                {
+                    if (floor.canMove)
+                    {
+                        nextTurn = Tools.Timer.New(turnSpeed);
+                        MoveMember(1, hit.transform.position);
+                        teamMemberTurn++;
+                        if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = 0;
+                        Invoke("NewTurn", turnSpeed + .1f);
+                    }
+                }
+                else
+                {
+
+                    if (floor.blocked && floor.enemy != null)
+                    {
+                        nextTurn = Tools.Timer.New(turnSpeed);
+                        Attack(floor.enemy);
+                        Debug.Log("Attack");
+                        teamMemberTurn++;
+                        if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = 0;
+                        Invoke("NewTurn", turnSpeed + .1f);
+                    }
+                }
+            }
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            attackMode = !attackMode;
+            NewTurn();
+        }
     }
 
-    void NewTurn()
+    private void Attack(Enemy enemy)
+    {
+        enemy.LooseLife(squadMembers[teamMemberTurn].attackValue);
+    }
+
+    public void NewTurn()
     {
         foreach (SelectableFloor selectableFloor in selectableFloors)
         {
             selectableFloor.blocked = false;
-            if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].mouveSpeed &&
-                selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].mouveSpeed &&
-                selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].mouveSpeed &&
-                selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].mouveSpeed &&
-                Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
-                selectableFloor.canMove = true;
+            if (attackMode)
+            {
+                if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].attackRange &&
+                    selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].attackRange &&
+                    selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].attackRange &&
+                    selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].attackRange &&
+                    Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
+                    selectableFloor.canAttack = true;
+                else
+                {
+                    selectableFloor.canAttack = false;
+                }
+                selectableFloor.canMove = false;
+            }
             else
             {
-                selectableFloor.canMove = false;
+                if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].moveSpeed &&
+                    selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].moveSpeed &&
+                    selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].moveSpeed &&
+                    selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].moveSpeed &&
+                    Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
+                    selectableFloor.canMove = true;
+                else
+                {
+                    selectableFloor.canMove = false;
+                }
+                selectableFloor.canAttack = false;
             }
         }
         foreach (SquadMember squadMember in squadMembers)
@@ -73,8 +126,7 @@ public class SquadControl : MonoBehaviour
     void MoveMember(int dist, Vector3 dir)
     {
         dir.y = .9f;
-        squadMembers[teamMemberTurn].transform.DOMove(dir, turnSpeed,false);
-        Invoke("NewTurn", turnSpeed+.1f);
+        squadMembers[teamMemberTurn].transform.DOMove(dir, turnSpeed, false);
     }
 
     float nextTurn;

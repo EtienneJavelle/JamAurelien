@@ -8,6 +8,10 @@ public static class Tools
     {
         return new Vector3(pos.x, 0, pos.z);
     }
+    public static Vector3 YZero(float x, float y)
+    {
+        return new Vector3(x, 0, y);
+    }
 
     public static class Timer
     {
