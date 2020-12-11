@@ -49,8 +49,8 @@ public class Enemies : MonoBehaviour
     void MoveEnemy(int dist, Vector3 dir, Enemy enemy)
     {
         dir.y = .9f;
-        dir.x += (int)UnityEngine.Random.Range(-1, 3);
-        dir.z += (int)UnityEngine.Random.Range(-1, 3);
+        dir.x += (int)UnityEngine.Random.Range(-1, 2);
+        dir.z += (int)UnityEngine.Random.Range(-1, 2);
         dir.x = Mathf.Clamp(dir.x, 0, GameObject.Find("Map").GetComponent<MapCreator>().mapSize.x-1);
         dir.z = Mathf.Clamp(dir.z, 0, GameObject.Find("Map").GetComponent<MapCreator>().mapSize.y-1);
 

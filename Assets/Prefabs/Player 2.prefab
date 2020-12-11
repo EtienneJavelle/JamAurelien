@@ -99,7 +99,8 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
-  poufPrefab: {fileID: 0}
+  poufPrefab: {fileID: 4812511308885236977, guid: 04168d4bab528184dab9ac40e4684e50,
+    type: 3}
   currentLife: 0
 --- !u!95 &6234520616195959463
 Animator:

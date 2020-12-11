@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Obstacles : MonoBehaviour
 {
-    public Transform[] obstacles;
+    public Arbre[] obstacles;
     [SerializeField]
     SelectableFloor[] selectableFloors;
 
@@ -14,15 +14,15 @@ public class Obstacles : MonoBehaviour
     {
         GameObject u = GameObject.Find("Team");
         selectableFloors = u.GetComponent<SquadControl>().selectableFloors;
-        obstacles = this.gameObject.GetComponentsInChildren<Transform>();
+        obstacles = this.gameObject.GetComponentsInChildren<Arbre>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        foreach (Transform obstacle in obstacles)
+        foreach (Arbre obstacle in obstacles)
         {
-            SelectableFloor under = Array.Find(selectableFloors, p => Tools.YZero(p.transform.position) == Tools.YZero(obstacle.position));
+            SelectableFloor under = Array.Find(selectableFloors, p => Tools.YZero(p.transform.position) == Tools.YZero(obstacle.transform.position));
             under.canMove = false;
             under.blocked = true;
         }
