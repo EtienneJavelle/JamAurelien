@@ -18,6 +18,7 @@ public class SquadControl : MonoBehaviour
     void Awake()
     {
         selectableFloors = this.gameObject.GetComponentsInChildren<SelectableFloor>();
+        enemies = GameObject.Find("Enemies").GetComponent<Enemies>();
         NewTurn();
     }
 
@@ -31,43 +32,50 @@ public class SquadControl : MonoBehaviour
             selectableFloor.selected = false;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit)) hit.transform.gameObject.GetComponent<SelectableFloor>().selected = true;
-
-        if (Input.GetButtonDown("Fire1") && Tools.Timer.Check(nextTurn))
+        if (teamMemberTurn > -1)
         {
-            if (hit.transform.gameObject.TryGetComponent(out SelectableFloor floor))
-            {
-                if (!attackMode)
-                {
-                    if (floor.canMove)
-                    {
-                        nextTurn = Tools.Timer.New(turnSpeed);
-                        MoveMember(1, hit.transform.position);
-                        teamMemberTurn++;
-                        if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = 0;
-                        Invoke("NewTurn", turnSpeed + .1f);
-                    }
-                }
-                else
-                {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit)) hit.transform.gameObject.GetComponent<SelectableFloor>().selected = true;
 
-                    if (floor.blocked && floor.enemy != null)
+            if (Input.GetButtonDown("Fire1") && Tools.Timer.Check(nextTurn))
+            {
+                if (hit.transform.gameObject.TryGetComponent(out SelectableFloor floor))
+                {
+                    if (!attackMode)
                     {
-                        nextTurn = Tools.Timer.New(turnSpeed);
-                        Attack(floor.enemy);
-                        Debug.Log("Attack");
-                        teamMemberTurn++;
-                        if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = 0;
-                        Invoke("NewTurn", turnSpeed + .1f);
+                        if (floor.canMove)
+                        {
+                            nextTurn = Tools.Timer.New(turnSpeed);
+                            MoveMember(1, hit.transform.position);
+                            teamMemberTurn++;
+                            if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = -1;
+                            Invoke("NewTurn", turnSpeed + .1f);
+                        }
+                    }
+                    else
+                    {
+
+                        if (floor.blocked && floor.enemy != null)
+                        {
+                            nextTurn = Tools.Timer.New(turnSpeed);
+                            Attack(floor.enemy);
+                            Debug.Log("Attack");
+                            teamMemberTurn++;
+                            if (teamMemberTurn >= squadMembers.Length) teamMemberTurn = -1;
+                            Invoke("NewTurn", turnSpeed + .1f);
+                        }
                     }
                 }
             }
+            if (Input.GetButtonDown("Fire2"))
+            {
+                attackMode = !attackMode;
+                NewTurn();
+            }
         }
-        if (Input.GetButtonDown("Fire2"))
+        else
         {
-            attackMode = !attackMode;
-            NewTurn();
+            enemies.enemyTurn = true;
         }
     }
 
@@ -81,33 +89,41 @@ public class SquadControl : MonoBehaviour
         foreach (SelectableFloor selectableFloor in selectableFloors)
         {
             selectableFloor.blocked = false;
-            if (attackMode)
+            if (teamMemberTurn > -1)
             {
-                if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].attackRange &&
-                    selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].attackRange &&
-                    selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].attackRange &&
-                    selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].attackRange &&
-                    Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
-                    selectableFloor.canAttack = true;
+                if (attackMode)
+                {
+                    if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].attackRange &&
+                        selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].attackRange &&
+                        selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].attackRange &&
+                        selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].attackRange &&
+                        Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
+                        selectableFloor.canAttack = true;
+                    else
+                    {
+                        selectableFloor.canAttack = false;
+                    }
+                    selectableFloor.canMove = false;
+                }
                 else
                 {
+                    if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].moveSpeed &&
+                        selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].moveSpeed &&
+                        selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].moveSpeed &&
+                        selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].moveSpeed &&
+                        Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
+                        selectableFloor.canMove = true;
+                    else
+                    {
+                        selectableFloor.canMove = false;
+                    }
                     selectableFloor.canAttack = false;
                 }
-                selectableFloor.canMove = false;
             }
             else
             {
-                if (selectableFloor.transform.position.x <= squadMembers[teamMemberTurn].transform.position.x + squadMembers[teamMemberTurn].moveSpeed &&
-                    selectableFloor.transform.position.x >= squadMembers[teamMemberTurn].transform.position.x - squadMembers[teamMemberTurn].moveSpeed &&
-                    selectableFloor.transform.position.z <= squadMembers[teamMemberTurn].transform.position.z + squadMembers[teamMemberTurn].moveSpeed &&
-                    selectableFloor.transform.position.z >= squadMembers[teamMemberTurn].transform.position.z - squadMembers[teamMemberTurn].moveSpeed &&
-                    Tools.YZero(selectableFloor.transform.position) != Tools.YZero(squadMembers[teamMemberTurn].transform.position))
-                    selectableFloor.canMove = true;
-                else
-                {
-                    selectableFloor.canMove = false;
-                }
                 selectableFloor.canAttack = false;
+                selectableFloor.canMove = false;
             }
         }
         foreach (SquadMember squadMember in squadMembers)
@@ -127,7 +143,9 @@ public class SquadControl : MonoBehaviour
     {
         dir.y = .9f;
         squadMembers[teamMemberTurn].transform.DOMove(dir, turnSpeed, false);
+        Instantiate(squadMembers[teamMemberTurn].poufPrefab, squadMembers[teamMemberTurn].transform.position, Quaternion.identity);
     }
 
     float nextTurn;
+    Enemies enemies;
 }

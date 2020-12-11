@@ -96,7 +96,7 @@ PrefabInstance:
     - target: {fileID: 4812511308885236977, guid: 04168d4bab528184dab9ac40e4684e50,
         type: 3}
       propertyPath: m_Name
-      value: Particle System
+      value: PoufWalk
       objectReference: {fileID: 0}
     - target: {fileID: 5348507611477539764, guid: 04168d4bab528184dab9ac40e4684e50,
         type: 3}
