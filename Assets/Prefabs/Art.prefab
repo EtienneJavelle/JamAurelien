@@ -98,6 +98,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Particle System
       objectReference: {fileID: 0}
+    - target: {fileID: 5348507611477539764, guid: 04168d4bab528184dab9ac40e4684e50,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5348507611477539764, guid: 04168d4bab528184dab9ac40e4684e50,
+        type: 3}
+      propertyPath: ShapeModule.angle
+      value: 8.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5348507611477539764, guid: 04168d4bab528184dab9ac40e4684e50,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04168d4bab528184dab9ac40e4684e50, type: 3}
 --- !u!4 &7773602959342813773 stripped
