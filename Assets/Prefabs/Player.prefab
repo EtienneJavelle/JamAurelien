@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5566061014226011118}
   m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
   m_LocalPosition: {x: 0, y: 0.9, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   moveSpeed: 1
   attackRange: 1
   attackValue: 1
+  poufPrefab: {fileID: 0}
   currentLife: 0
 --- !u!95 &1632042236765649987
 Animator:
